@@ -1,0 +1,38 @@
+﻿@model OverviewCountryModel
+@{
+    ViewData["Title"] = "Overview Country";
+}
+
+<!-- Page friends-by-country -->
+      
+<div class="container px-4 py-4" id="friends-by-country">
+  <h2 class="pb-2 border-bottom">Friends by country</h2>
+  <p>Click in on a country below to see what cities my friends are living in.</p>
+
+  <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
+    @if (Model.GroupedFriends is not null)
+    {
+        @foreach (var item in Model.GroupedFriends)
+        {
+          if(item.Country is not null)
+          {
+              <a href="~/Overview/OverViewCities?country=@item.Country" class="text-decoration-none">
+                <div class="col">
+                  <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('./img/unsplash-photo-3.jpg');">
+                    <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                      <h3 class="pt-1 mt-1 mb-4 display-6 lh-1 fw-bold">@item.Country</h3>
+                        <p class="fs-5"> @item.NrFriends Friends 
+                          @if(@item.NrCities != 0) 
+                          {
+                            <span> in @item.NrCities cities </span>
+                          }
+                        </p>
+                    </div>
+                  </div>
+                </div>
+              </a>
+          }
+        }
+    }
+  </div>
+</div>

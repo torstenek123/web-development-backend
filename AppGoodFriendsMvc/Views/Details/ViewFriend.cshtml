@@ -1,0 +1,151 @@
+@model ViewFriendModel
+@using Microsoft.AspNetCore.Authorization;
+@{
+    ViewData["Title"] = "View friend";
+}
+
+<!-- Page view-friend-detail -->
+    <div class="container px-4 py-4" id="view-friend">
+        <h2 class="pb-2 border-bottom">View details of a friend</h2>
+        <p>Below you find all the details of my friend. You can also modify the pets my friend has and the quotes he/she likes.</p>
+        <form class="needs-validation" method="post" novalidate>
+           <!-- to keep friend id between posts-->
+          <input asp-for="FriendId" type="hidden">
+        <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
+            <div class="col-md-7 col-lg-8">
+                <div class="row g-3">
+                  <div class="col-sm-6">
+                    <label for="firstName" class="form-label">First name</label>
+                    <input type="text" class="form-control" id="firstName" value="@Model.Friend.FirstName" required>
+                  </div>
+      
+                  <div class="col-sm-6">
+                    <label for="lastName" class="form-label">Last name</label>
+                    <input type="text" class="form-control" id="lastName" value="@Model.Friend.LastName" required>
+                  </div>
+              
+                  <div class="col-sm-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" value="@Model.Friend.Email">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="birthday" class="form-label">Birthday</label>
+                    <input type="birthday" class="form-control" id="birthday" value="@Model.Friend.Birthday?.ToString("yyyy-MM-dd")">
+                  </div>
+
+                  <div class="row g-3 visible">
+                    <div class="col-12">
+                      <label for="address" class="form-label">Address</label>
+                      <input type="text" class="form-control" id="address" value="@Model.Friend.Address?.StreetAddress"required>
+                    </div>
+        
+                    <div class="col-md-3">
+                      <label for="zip" class="form-label">Zip</label>
+                      <input type="text" class="form-control" id="zip" value="@Model.Friend.Address?.ZipCode" required>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label for="city" class="form-label">City</label>
+                      <input type="text" class="form-control" id="city" value="@Model.Friend.Address?.City" required>
+                    </div>
+        
+                    <div class="col-md-5">
+                      <label for="country" class="form-label">Country</label>
+                      <input type="text"  class="form-control" id="country" value="@Model.Friend.Address?.Country" required>
+                  </div>
+                </div>
+                </div>
+
+              <a href="EditFriend?id=@Model.Friend.FriendId" class="w-100 btn btn-primary btn-lg my-4">Edit friend details</a>
+            </div>
+            
+            <div class="col-md-7 col-lg-8">
+              <h3 class="pb-2">My friend's pets
+                <input type="hidden" name="itemId" data-seido-selected-item-id-target />
+              </h3>
+
+                @if(Model.Friend.Pets is not null)
+                {
+                    @foreach(var item in Model.Friend.Pets)
+                    {
+                        <div class="row mb-2 text-center">
+                            <div class="col-md-10 themed-grid-col">@item.Name</div>
+                            <div class="col-md-2 themed-grid-col">
+                                <!-- Button to trigger modal confirmation with modal in the form tag -->
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delModalPet"
+                                        data-seido-modal-body="@item.Name is about to be deleted."
+                                        data-seido-modal-post-data="@Model.Friend.FriendId"
+                                        data-seido-selected-item-id="@item.PetId">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+            
+            <div class="col-md-7 col-lg-8">
+              <h3 class="pb-2">My friend's favorite quotes</h3>
+                @if(Model.Friend.Quotes is not null)
+                {
+                    @foreach(var item in Model.Friend.Quotes)
+                    {
+                        <div class="row mb-2 text-center">
+                            <div class="col-md-10 themed-grid-col">
+                                @item.QuoteText
+                                <div class="col-md-16  text-end">@item.Author</div>
+                            </div>
+                            <div class="col-md-2 themed-grid-col">
+                                <!-- Button to trigger modal confirmation with modal in the form tag -->
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delModalQuote"
+                                        data-seido-modal-body="@item.QuoteText by @item.Author is about to be deleted."
+                                        data-seido-modal-post-data="@Model.Friend.FriendId"
+                                        data-seido-selected-item-id="@item.QuoteId">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- Modal in the form tag -->
+            <div class="modal fade" id="delModalPet" tabindex="-1" aria-labelledby="softModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-danger" id="softModalLabel">Confirm deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Hello from modal
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" asp-action="DeletePet" class="btn btn-primary btn-danger">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="delModalQuote" tabindex="-1" aria-labelledby="softModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-danger" id="softModalLabel">Confirm deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Hello from modal
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" asp-action="DeleteQuote" class="btn btn-primary btn-danger">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+      </form>
+    </div>
