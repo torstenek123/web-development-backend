@@ -23,5 +23,5 @@ To create the AppGoodFriendsWebApi
    All endpoints on Controllers Addresses, Friends, Pets, Quotes executable
 
 To run AppGoodFriendsMvc or AppGoodFriendsRazor websites
-Open Program.cs
-Debug using https profile
+   Open Program.cs
+   Debug using https profile
