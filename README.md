@@ -1,3 +1,5 @@
+This project is a webapi that integrates with 2 websites. Data includes friends, countries and cities. Views includes overviews of countries/cities/friends and CRUD operations.
+
 To create the AppGoodFriendsWebApi
 
 1. With Terminal in folder .scripts 
